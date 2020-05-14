@@ -11,7 +11,8 @@
 
 
 let keywords = ["Гобой", "Как звучит флейта", "Что такое валторна", "Как выглядит тромбон", "Музыкальные диктанты онлайн", "Виолончель"];
-let keyword  = keywords[getRandom(0,keywords.length)];
+let keyword = keywords[getRandom(0,keywords.length)];
+let links = document.links;
 
 let button = document.getElementsByClassName("button mini-suggest__button")[0];
   if(button != undefined){
@@ -19,16 +20,15 @@ let button = document.getElementsByClassName("button mini-suggest__button")[0];
   }
 
 
-let links = document.links;
-    if (location.host == "www.yandex.ru/"){
-        getYandexPage();
+if (location.host == "yandex.ru"){
+    getYandexPage();
 }
 else {
     if (getRandom(0,100)>20){
         let index = getRandom(0,links.length);
-        if(links[index].href.indexOf('xn----7sbab5aqcbiddtdj1e1g.xn--p1ai')!=-1)
-            links[index].removeAttribute("target");
-            setTimeout(()=>{links[index].click();},getRandom(3000, 10000));
+        if(links[index].href.indexOf('xn----7sbab5aqcbiddtdj1e1g.xn--p1ai')!=-1){
+            setTimeout(()=>{links[index].click();},getRandom(2000,5000));
+        }
         else location.href = 'https://xn----7sbab5aqcbiddtdj1e1g.xn--p1ai/';
     }
     else location.href = "https://yandex.ru/";
@@ -57,15 +57,17 @@ function getYandexPage(){
         if(links[i].href.indexOf('xn----7sbab5aqcbiddtdj1e1g.xn--p1ai')!=-1){
             let link = links[i];
             goNextPage = false;
-            setTimeout(()=>link.click(), getRandom(3000,10000));
+            links[i].removeAttribute("target");
+            setTimeout(()=>link.click(), getRandom(2000,5000));
             break;
         }
     }
-    if (goNextPage) setTimeout(()=>{
-        let logo = document.getElementsByClassName("serp-header__logo")[0];
-        let next = document.getElementsByClassName("link link_theme_none link_target_serp pager__item pager__item_kind_next i-bem link_js_inited")[0];
-        let desiredPage = document.getElementsByClassName("pager__item pager__item_current_yes pager__item_kind_page")[0];
-        if (desiredPage.innerText == 10) logo.click();
+    if (goNextPage){ setTimeout(()=>{
+        //let logo = document.getElementsByClassName("serp-header__logo")[0];  Не хочет кликать на логотип
+        let next = document.querySelector(`[aria-label="Следующая страница"]`);
+        let currentPage = document.getElementsByClassName(`pager__item pager__item_current_yes pager__item_kind_page`)[0];
+        if (currentPage.innerText == 10) location.href = "https://yandex.ru/"; //Поэтому прямая ссылка
         else next.click();
-    }, getRandom(3000,10000));
+    }, getRandom(2000,5000));
+  }
 }
