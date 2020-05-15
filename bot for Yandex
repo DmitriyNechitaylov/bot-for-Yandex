@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Bot for Yandex v0.2
+// @name         Bot for Yandex
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  try to take over the world!
 // @author       You
 // @match        https://yandex.ru/*
@@ -21,19 +21,22 @@ if (location.host == "yandex.ru"){
     "crushdrummers.ru":["Барабанное шоу","Шоу барабанщиков Москвы","Заказать барабанное щоу"]
 }
 
-    site = Object.keys(sites)[getRandom(0,Object.keys(sites).length)];
-
-    let keywords = sites[site];
-    let keyword = keywords[getRandom(0,keywords.length)];
     if(button != undefined){
-    writeWord(keyword);
+        site = Object.keys(sites)[getRandom(0,Object.keys(sites).length)];
+        let keywords = sites[site];
+        let keyword = keywords[getRandom(0,keywords.length)];
+        document.cookie = "site="+site;
+        writeWord(keyword);
   }
+    else{
+    site = getCookie("site");
+    }
     getYandexPage();
 }
 else {
     if (getRandom(0,100)>20){
         let index = getRandom(0,links.length);
-        if(links[index].href.indexOf(site)!=-1){
+        if(links[index].href.indexOf(site)!=-1 && links[index].href.indexOf("#") == -1 && links[index].href.indexOf(".jpg") == -1){
             setTimeout(()=>{links[index].click();},getRandom(2000,5000));
         }
         else setTimeout(()=>{location.href = `https://${site}/`;},getRandom(2000,5000));
@@ -77,4 +80,10 @@ function getYandexPage(){
         else next.click();
     }, getRandom(2000,5000));
   }
+}
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
